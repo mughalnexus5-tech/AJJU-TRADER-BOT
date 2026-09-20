@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { TradingPair, MarketType, PairCategory } from "../types";
+import { TradingPair } from "../types";
 import { playClickSound } from "../utils/soundEffects";
 import { 
   TrendingUp, 
@@ -95,7 +95,7 @@ export const MarketCenter: React.FC<MarketCenterProps> = ({
             className="bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer"
           >
             <option value="ALL">ALL PROTOCOLS</option>
-            <option value="OTC">OTC ONLY (HIGH PAYOUT)</option>
+            <option value="OTC">QUOTEX OTC</option>
             <option value="LIVE">LIVE ONLY</option>
           </select>
         </div>
@@ -117,7 +117,7 @@ export const MarketCenter: React.FC<MarketCenterProps> = ({
       </div>
 
       {/* Market Cards Grid (NO CHARTS - Section 13) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20 md:pb-0">
         {filteredPairs.map((pair) => {
           const isFav = favorites.includes(pair.id);
           const isBull = pair.trend === "BULLISH";
@@ -151,7 +151,7 @@ export const MarketCenter: React.FC<MarketCenterProps> = ({
                         {pair.name}
                       </h4>
                       <span className="text-[10px] font-mono text-slate-400">
-                        {pair.category} • {pair.marketType}
+                        {pair.marketType === "OTC" ? "QUOTEX • OTC" : `${pair.category} • LIVE`}
                       </span>
                     </div>
                   </div>

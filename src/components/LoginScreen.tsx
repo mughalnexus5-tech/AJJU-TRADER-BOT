@@ -5,7 +5,9 @@ import { playClickSound, playReadyAlert } from "@/utils/soundEffects";
 import { useServerFn } from "@/lib/rpc";
 import { verifyAccessKey } from "@/lib/license.functions";
 import { getDeviceId, getDeviceName } from "@/lib/device";
-import { ShieldCheck, Cpu, KeyRound, Sparkles, AlertCircle, Radio } from "lucide-react";
+import { ShieldCheck, Cpu, KeyRound, Sparkles, AlertCircle, Radio, MessageCircle } from "lucide-react";
+
+const WHATSAPP_CHANNEL_URL = "https://whatsapp.com/channel/0029Vb9hzvd5EjxzfM5wgy0q";
 
 interface LoginScreenProps {
   onLoginSuccess: (userData: { username: string; role: string; tier: string; key: string; expiryDate: string }) => void;
@@ -162,6 +164,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 </>
               )}
             </button>
+
+            <a
+              href={WHATSAPP_CHANNEL_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="flex w-full items-center justify-center gap-2 text-center text-xs font-tech font-bold text-emerald-400 transition hover:text-emerald-300"
+            >
+              <MessageCircle className="h-4 w-4" />
+              <span>Don't have an Access Key? Get Key on WhatsApp</span>
+            </a>
           </form>
 
           {/* Connection Telemetry Footer */}

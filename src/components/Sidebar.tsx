@@ -11,8 +11,10 @@ import {
   UserCircle, 
   Sliders,
   Sparkles,
-  ShieldAlert
+  MessageCircle
 } from "lucide-react";
+
+const WHATSAPP_CHANNEL_URL = "https://whatsapp.com/channel/0029Vb9hzvd5EjxzfM5wgy0q";
 
 interface SidebarProps {
   activeView: AppNavView;
@@ -66,7 +68,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-16 bottom-0 left-0 z-40 w-64 glass-panel border-r border-slate-800/80 p-4 flex flex-col justify-between transition-transform duration-300 ease-in-out md:translate-x-0 ${
+        className={`fixed top-16 bottom-16 md:bottom-0 left-0 z-40 w-64 glass-panel border-r border-slate-800/80 p-4 flex flex-col justify-between overflow-y-auto transition-transform duration-300 ease-in-out md:translate-x-0 ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -89,17 +91,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={`relative w-full group flex items-center justify-between px-3.5 py-3 rounded-xl font-tech text-sm tracking-wider font-bold transition-all duration-200 cursor-pointer overflow-hidden ${
                     isActive
                       ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-slate-950 shadow-lg shadow-emerald-950/80 border border-emerald-400"
-                      : "bg-emerald-950/30 text-emerald-300 hover:bg-emerald-900/40 border border-emerald-500/30"
+                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent"
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`w-5 h-5 ${isActive ? "text-slate-950" : "text-emerald-400 animate-pulse"}`} />
+                  <Icon className={`w-5 h-5 ${isActive ? "text-slate-950" : "text-slate-500"}`} />
                     <span>{item.label}</span>
                   </div>
 
                   <span
                     className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase tracking-wider ${
-                      isActive ? "bg-slate-950 text-emerald-300" : "bg-emerald-500/20 text-emerald-300"
+                      isActive ? "bg-slate-950 text-emerald-300" : "bg-slate-800 text-slate-400"
                     }`}
                   >
                     VIP
@@ -134,7 +136,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Bottom Terminal Status Box */}
-        <div className="pt-4 border-t border-slate-800/80">
+        <div className="space-y-3 pt-4 border-t border-slate-800/80">
+          <a
+            href={WHATSAPP_CHANNEL_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-500/50 bg-emerald-500/15 px-3 py-2.5 text-center font-tech text-xs font-bold text-emerald-300 transition hover:bg-emerald-500/25"
+          >
+            <MessageCircle className="h-4 w-4" />
+            <span>JOIN WHATSAPP CHANNEL / SUPPORT</span>
+          </a>
           <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 font-mono text-[11px] space-y-1.5">
             <div className="flex items-center justify-between text-slate-400">
               <span>ALGO ENGINE</span>

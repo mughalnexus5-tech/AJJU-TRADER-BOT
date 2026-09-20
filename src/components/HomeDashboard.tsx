@@ -34,6 +34,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
   signalsTodayCount,
   soundEnabled
 }) => {
+  const biasPair = pairs.find((pair) => pair.id === "usdinr-otc") ?? pairs.find((pair) => pair.marketType === "OTC") ?? pairs[0];
   // Live simulated bull vs bear dynamic battle power
   const [bullPower, setBullPower] = useState(62);
   const [bearPower, setBearPower] = useState(38);
@@ -83,10 +84,6 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               QUANTITATIVE BINARY CONFLUENCE COMMAND TERMINAL
             </p>
 
-            <p className="text-xs md:text-sm text-slate-300 leading-relaxed font-sans">
-              Precision candle-rejection analysis, multi-oscillator verification, and dedicated 5-second broker entry countdown. Built for binary traders who demand systematic execution over emotional guesswork.
-            </p>
-
             {/* Quick Action Buttons */}
             <div className="pt-2 flex flex-wrap items-center gap-3">
               <button
@@ -119,7 +116,12 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
             <div className="flex items-center justify-between pb-2.5 border-b border-slate-800">
               <div className="flex items-center gap-2">
                 <BrandLogo size="sm" showText={false} />
-                <span className="font-tech text-xs font-bold text-slate-200">MARKET BIAS INDEX</span>
+                <div>
+                  <span className="block font-tech text-xs font-bold text-slate-200">MARKET BIAS INDEX</span>
+                  <span className="block text-[9px] font-mono text-emerald-400">
+                    {biasPair?.name.replace(/\s*\(OTC\)\s*$/i, "") ?? "USD / INR"} ({biasPair?.marketType === "OTC" ? "QUOTEX OTC" : "LIVE"})
+                  </span>
+                </div>
               </div>
               <span className="text-[10px] font-mono text-emerald-400 font-bold flex items-center gap-1">
                 <Radio className="w-3 h-3 animate-pulse text-emerald-400" /> LIVE TICK
@@ -343,7 +345,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               </div>
 
               <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-                <span>{pair.marketType}</span>
+                <span>{pair.marketType === "OTC" ? "QUOTEX OTC" : "LIVE"}</span>
                 <span className={pair.change24h >= 0 ? "text-emerald-400" : "text-red-400"}>
                   {pair.change24h >= 0 ? `+${pair.change24h}%` : `${pair.change24h}%`}
                 </span>

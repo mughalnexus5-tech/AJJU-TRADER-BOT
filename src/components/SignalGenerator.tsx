@@ -41,8 +41,17 @@ import {
   Timer,
   Award,
   Flame,
-  CheckCircle
+  CheckCircle,
+  X,
+  ExternalLink
 } from "lucide-react";
+
+const QUOTEX_URL = "https://quotex.com/";
+
+const cleanPairName = (name: string) => name.replace(/\s*\(OTC\)\s*$/i, "");
+
+const pairDisplayName = (pair: TradingPair) =>
+  `${cleanPairName(pair.name)} (${pair.marketType === "OTC" ? "QUOTEX OTC" : "LIVE"})`;
 
 interface SignalGeneratorProps {
   pairs: TradingPair[];
@@ -76,7 +85,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
 }) => {
   // Market & Category filter states
   const [marketType, setMarketType] = useState<MarketType>("OTC");
-  const [category, setCategory] = useState<PairCategory>("FOREX");
+  const [category, setCategory] = useState<PairCategory | "ALL">("FOREX");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [favorites, setFavorites] = useState<string[]>(["eurusd-otc", "btcusd-otc", "xauusd-otc"]);
@@ -102,6 +111,23 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
   const [analysisLogs, setAnalysisLogs] = useState<string[]>([]);
   const [latestSignal, setLatestSignal] = useState<GeneratedSignal | null>(null);
   const [copied, setCopied] = useState(false);
+  const [showTradeSettings, setShowTradeSettings] = useState(false);
+  const [entryWindow, setEntryWindow] = useState(0);
+
+  useEffect(() => {
+    if (tradePhase !== "signal_ready" || !latestSignal) return;
+    setEntryWindow(latestSignal.expirySeconds);
+    const timer = window.setInterval(() => {
+      setEntryWindow((value) => {
+        if (value <= 1) {
+          window.clearInterval(timer);
+          return 0;
+        }
+        return value - 1;
+      });
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [tradePhase, latestSignal]);
 
   // Timeframe options based on Market Type
   const availableTimeframes: TimeFrame[] = useMemo(() => {
@@ -134,7 +160,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
   const filteredPairs = useMemo(() => {
     return pairs.filter((pair) => {
       const matchesMarket = pair.marketType === marketType;
-      const matchesCategory = pair.category === category;
+      const matchesCategory = category === "ALL" || pair.category === category;
       const matchesSearch =
         pair.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         pair.symbol.toLowerCase().includes(searchQuery.toLowerCase());
@@ -219,7 +245,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
 
     const newSignal: GeneratedSignal = {
       id: "sig-" + Date.now(),
-      pair: `${selectedPair.name} (${marketType})`,
+      pair: pairDisplayName(selectedPair),
       market: marketType,
       timeframe,
       direction,
@@ -243,6 +269,9 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
 
     setLatestSignal(newSignal);
     setTradePhase("signal_ready");
+    setEntryWindow(durationSec);
+
+    if ("vibrate" in navigator) navigator.vibrate([180, 80, 180]);
 
     // Play signal chime and voice prompt
     if (direction === "CALL") {
@@ -296,7 +325,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
         <div className="flex items-center gap-3 p-2.5 rounded-xl glass-panel border border-emerald-500/30">
           <div className="flex flex-col">
             <span className="text-[10px] font-mono text-slate-400">ACTIVE TARGET PAIR</span>
-            <span className="font-tech font-bold text-emerald-300 text-sm">{selectedPair.name}</span>
+            <span className="font-tech font-bold text-emerald-300 text-sm">{pairDisplayName(selectedPair)}</span>
           </div>
           <div className="px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono font-bold text-xs">
             {selectedPair.payout}% PAYOUT
@@ -331,7 +360,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                   }`}
                 >
                   <Flame className="w-3.5 h-3.5" />
-                  <span>OTC (HIGH 92%+)</span>
+                  <span>QUOTEX OTC</span>
                 </button>
 
                 <button
@@ -354,6 +383,21 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
 
             {/* Category Filter Pills */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+              <button
+                type="button"
+                onClick={() => {
+                  playClickSound(soundEnabled);
+                  setMarketType("OTC");
+                  setCategory("ALL");
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition cursor-pointer shrink-0 ${
+                  marketType === "OTC" && category === "ALL"
+                    ? "bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold"
+                    : "bg-slate-900/60 border border-slate-800/80 text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                QUOTEX OTC
+              </button>
               {(["FOREX", "CRYPTO", "METALS"] as PairCategory[]).map((cat) => (
                 <button
                   key={cat}
@@ -414,6 +458,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                       onClick={() => {
                         playClickSound(soundEnabled);
                         setSelectedPair(pair);
+                        setShowTradeSettings(true);
                       }}
                       className={`p-2.5 rounded-xl border transition-all flex items-center justify-between cursor-pointer ${
                         isSelected
@@ -434,7 +479,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                             {pair.name}
                           </span>
                           <span className="text-[10px] font-mono text-slate-400">
-                            {pair.marketType} • {pair.rate.toFixed(5)}
+                            {pair.marketType === "OTC" ? "QUOTEX OTC" : "LIVE"} • {pair.rate.toFixed(5)}
                           </span>
                         </div>
                       </div>
@@ -462,8 +507,35 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
         {/* RIGHT COLUMN: Engine Config, Pre-Entry Countdown, & Live Trade Window (8 Cols) */}
         <div className="lg:col-span-8 space-y-5">
           
-          {/* Engine Parameters Selection Card */}
-          <div className="p-5 md:p-6 rounded-2xl glass-panel border border-slate-800 space-y-5">
+          {tradePhase === "idle" && !showTradeSettings && (
+            <button
+              type="button"
+              onClick={() => setShowTradeSettings(true)}
+              className="w-full rounded-xl border border-emerald-500/40 bg-emerald-500/15 px-5 py-4 font-tech text-sm font-bold text-emerald-300 transition hover:bg-emerald-500/25"
+            >
+              CONFIGURE {pairDisplayName(selectedPair)} TRADE
+            </button>
+          )}
+
+          {/* Focused Trade Settings Modal */}
+          {showTradeSettings && tradePhase === "idle" && (
+          <div className="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-slate-950/80 p-4 backdrop-blur-md">
+          <div className="relative my-auto w-full max-w-3xl p-5 md:p-6 rounded-2xl glass-panel border border-emerald-500/40 space-y-5 shadow-2xl">
+            <button
+              type="button"
+              aria-label="Close trade settings"
+              onClick={() => setShowTradeSettings(false)}
+              className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-slate-300 transition hover:border-emerald-500 hover:text-emerald-300"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            <div className="border-b border-slate-800 pb-4 pr-10">
+              <span className="text-[10px] font-mono font-bold text-emerald-400">TRADE SETTINGS</span>
+              <h3 className="mt-1 font-tech text-base font-bold text-slate-100 md:text-lg">
+                SELECTED PAIR: {pairDisplayName(selectedPair)} — {selectedPair.payout}% PAYOUT
+              </h3>
+            </div>
             
             {/* Timeframe Selector (Crucial for 5s, 10s, 15s, 30s OTC Signals) */}
             <div>
@@ -549,21 +621,24 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
             </div>
 
             {/* GENERATE SIGNAL BUTTON (Active whenever not currently analyzing) */}
-            {tradePhase !== "analyzing" && (
               <div className="relative group pt-1">
                 <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-amber-500 rounded-2xl blur-md opacity-40 group-hover:opacity-75 transition duration-300"></div>
                 <button
                   type="button"
-                  onClick={handleGenerateSignal}
+                  onClick={() => {
+                    setShowTradeSettings(false);
+                    handleGenerateSignal();
+                  }}
                   className="relative w-full py-4 px-8 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-tech font-extrabold text-base md:text-lg tracking-widest uppercase transition transform active:scale-[0.99] shadow-xl shadow-emerald-950/80 flex items-center justify-center gap-3 cursor-pointer"
                 >
                   <Cpu className="w-5 h-5" />
-                  <span>GENERATE {selectedPair.name} {timeframe} SIGNAL</span>
+                  <span>GENERATE {pairDisplayName(selectedPair)} {timeframe} SIGNAL</span>
                   <Sparkles className="w-5 h-5" />
                 </button>
               </div>
-            )}
           </div>
+          </div>
+          )}
 
           {/* PHASE 1: 12-STAGE CONFLUENCE RADAR SCANNING */}
           {tradePhase === "analyzing" && (
@@ -670,7 +745,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
               <div className="py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <div>
                   <span className="text-xs font-mono uppercase tracking-widest text-slate-400">
-                    {latestSignal.market} PROTOCOL
+                    {latestSignal.market === "OTC" ? "QUOTEX OTC" : "LIVE"} PROTOCOL
                   </span>
                   <h3 className="text-3xl md:text-4xl font-tech font-extrabold text-white mt-0.5">
                     {latestSignal.pair}
@@ -706,6 +781,18 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                       </>
                     )}
                   </div>
+                  <div className="mt-3 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-2 font-mono text-sm font-bold text-amber-300">
+                    Entry Window: {String(Math.floor(entryWindow / 60)).padStart(2, "0")}:{String(entryWindow % 60).padStart(2, "0")}s
+                  </div>
+                  <a
+                    href={QUOTEX_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-500/50 bg-emerald-500/15 px-5 py-3 font-tech text-xs font-bold text-emerald-300 transition hover:bg-emerald-500/25"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    <span>OPEN QUOTEX &amp; TRADE NOW</span>
+                  </a>
                 </div>
               </div>
 

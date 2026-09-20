@@ -304,10 +304,10 @@ export const TerminalApp: React.FC = () => {
             className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition cursor-pointer relative ${
               activeView === "signals"
                 ? "text-emerald-300 font-bold"
-                : "text-emerald-500 hover:text-emerald-300"
+                : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            <div className={`p-1.5 rounded-xl transition ${activeView === "signals" ? "bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/50" : "bg-emerald-950/60 text-emerald-400 border border-emerald-500/40"}`}>
+              <div className={`p-1.5 rounded-xl transition ${activeView === "signals" ? "bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/50" : "text-slate-500"}`}>
               <Cpu className="w-5 h-5" />
             </div>
             <span className="text-[10px] font-tech tracking-wider">SIGNALS</span>
