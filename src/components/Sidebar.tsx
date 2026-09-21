@@ -141,9 +141,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             href={WHATSAPP_CHANNEL_URL}
             target="_blank"
             rel="noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-emerald-500/50 bg-emerald-500/15 px-3 py-2.5 text-center font-tech text-xs font-bold text-emerald-300 transition hover:bg-emerald-500/25"
+            className="flex w-full items-center gap-2.5 rounded-lg border border-emerald-500/50 bg-emerald-500/15 p-2.5 text-left font-tech text-[11px] font-bold text-emerald-300 transition hover:bg-emerald-500/25"
           >
-            <MessageCircle className="h-4 w-4" />
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-emerald-400/60 bg-emerald-500/20">
+              <MessageCircle className="h-4 w-4" />
+            </span>
             <span>JOIN WHATSAPP CHANNEL / SUPPORT</span>
           </a>
           <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 font-mono text-[11px] space-y-1.5">

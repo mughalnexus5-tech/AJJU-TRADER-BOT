@@ -113,6 +113,14 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
   const [copied, setCopied] = useState(false);
   const [showTradeSettings, setShowTradeSettings] = useState(false);
   const [entryWindow, setEntryWindow] = useState(0);
+  const resultSectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (tradePhase === "idle") return;
+    window.requestAnimationFrame(() => {
+      resultSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [tradePhase]);
 
   useEffect(() => {
     if (tradePhase !== "signal_ready" || !latestSignal) return;
@@ -290,6 +298,8 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
     playClickSound(soundEnabled);
     setTradePhase("idle");
     setLatestSignal(null);
+    setShowTradeSettings(false);
+    window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
   };
 
   const handleCopySignal = () => {
@@ -303,7 +313,8 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
 
   return (
     <div className="space-y-6 pb-12">
-      {/* Top Header & Terminal Status */}
+      {/* Pair selection is intentionally hidden while analysis/results are active. */}
+      {tradePhase === "idle" && (
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -332,11 +343,13 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
           </div>
         </div>
       </div>
+      )}
 
       {/* Main Grid: Pair Selector Left + Engine Controls Right */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div ref={resultSectionRef} className={tradePhase === "idle" ? "grid grid-cols-1 lg:grid-cols-12 gap-6" : "w-full"}>
         
         {/* LEFT COLUMN: Pair Selection Console (4 Cols) */}
+        {tradePhase === "idle" && (
         <div className="lg:col-span-4 space-y-4">
           <div className="p-4 md:p-5 rounded-2xl glass-panel border border-slate-800 space-y-4">
             
@@ -503,9 +516,10 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
             </div>
           </div>
         </div>
+        )}
 
         {/* RIGHT COLUMN: Engine Config, Pre-Entry Countdown, & Live Trade Window (8 Cols) */}
-        <div className="lg:col-span-8 space-y-5">
+        <div className={tradePhase === "idle" ? "lg:col-span-8 space-y-5" : "mx-auto w-full max-w-5xl space-y-5"}>
           
           {tradePhase === "idle" && !showTradeSettings && (
             <button
@@ -642,7 +656,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
 
           {/* PHASE 1: 12-STAGE CONFLUENCE RADAR SCANNING */}
           {tradePhase === "analyzing" && (
-            <div className="p-6 rounded-2xl glass-panel-glow border border-emerald-500/40 space-y-5 animate-pulse-slow shadow-2xl">
+            <div className="min-h-[calc(100vh-9rem)] p-5 md:p-8 rounded-2xl glass-panel-glow border border-emerald-500/40 space-y-5 animate-pulse-slow shadow-2xl">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-slate-800">
                 <div className="flex items-center gap-3">
                   <div className="relative w-12 h-12 rounded-full border-2 border-emerald-500/50 flex items-center justify-center">
@@ -710,7 +724,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
           {/* VIP SIGNAL PRESENTATION (Direct, Instant - No countdown or trade entry delay) */}
           {tradePhase === "signal_ready" && latestSignal && (
             <div
-              className={`p-6 md:p-8 rounded-2xl transition-all duration-500 relative overflow-hidden shadow-2xl ${
+              className={`min-h-[calc(100vh-9rem)] p-5 md:p-8 rounded-2xl transition-all duration-500 relative overflow-hidden shadow-2xl ${
                 latestSignal.direction === "CALL"
                   ? "glass-panel-glow border-2 border-emerald-500 shadow-emerald-950/80"
                   : "glass-panel-red border-2 border-red-500 shadow-red-950/80"
@@ -742,8 +756,8 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
               </div>
 
               {/* Pair + Direction Hero Showcase */}
-              <div className="py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                <div>
+              <div className="py-5 grid gap-5 md:grid-cols-[1fr_1.25fr] md:items-center">
+                <div className="min-w-0">
                   <span className="text-xs font-mono uppercase tracking-widest text-slate-400">
                     {latestSignal.market === "OTC" ? "QUOTEX OTC" : "LIVE"} PROTOCOL
                   </span>
@@ -760,28 +774,38 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                   </div>
                 </div>
 
-                {/* Massive Glowing CALL / PUT Badge */}
-                <div className="flex flex-col items-center">
+                {/* High-contrast directional signal card */}
+                <div className="flex w-full flex-col items-stretch">
                   <div
-                    className={`px-8 py-4 rounded-2xl font-tech font-extrabold text-2xl md:text-3xl tracking-wider flex items-center gap-3 shadow-xl ${
+                    className={`w-full rounded-xl border bg-slate-950 px-4 py-4 font-tech font-extrabold shadow-xl ${
                       latestSignal.direction === "CALL"
-                        ? "bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 shadow-emerald-900/60"
-                        : "bg-gradient-to-r from-red-600 to-rose-500 text-white shadow-red-900/60"
+                        ? "border-emerald-400/70 shadow-emerald-900/60"
+                        : "border-red-500/70 shadow-red-900/60"
                     }`}
                   >
-                    {latestSignal.direction === "CALL" ? (
-                      <>
-                        <ArrowUpRight className="w-8 h-8 stroke-[3]" />
-                        <span>CALL (BUY HIGHER)</span>
-                      </>
-                    ) : (
-                      <>
-                        <ArrowDownRight className="w-8 h-8 stroke-[3]" />
-                        <span>PUT (SELL LOWER)</span>
-                      </>
-                    )}
+                    <div className="flex items-center gap-4">
+                      <div className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border shadow-lg ${
+                        latestSignal.direction === "CALL"
+                          ? "border-emerald-300 bg-emerald-500/20 text-emerald-300 shadow-emerald-500/30"
+                          : "border-red-400 bg-red-500/20 text-red-400 shadow-red-500/30"
+                      }`}>
+                        {latestSignal.direction === "CALL" ? (
+                          <ArrowUpRight className="h-11 w-11 stroke-[3]" />
+                        ) : (
+                          <ArrowDownRight className="h-11 w-11 stroke-[3]" />
+                        )}
+                      </div>
+                      <div className="min-w-0 text-left">
+                        <span className={`block text-xs font-mono font-bold ${latestSignal.direction === "CALL" ? "text-emerald-300" : "text-red-400"}`}>
+                          {latestSignal.direction === "CALL" ? "UP DIRECTION" : "DOWN DIRECTION"}
+                        </span>
+                        <span className="mt-1 block text-lg font-extrabold text-white md:text-2xl">
+                          {latestSignal.direction === "CALL" ? "CALL (BUY HIGHER)" : "PUT (SELL LOWER)"}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="mt-3 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-2 font-mono text-sm font-bold text-amber-300">
+                  <div className="mt-3 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-center font-mono text-sm font-bold text-amber-300">
                     Entry Window: {String(Math.floor(entryWindow / 60)).padStart(2, "0")}:{String(entryWindow % 60).padStart(2, "0")}s
                   </div>
                   <a
@@ -793,6 +817,15 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                     <ExternalLink className="h-4 w-4" />
                     <span>OPEN QUOTEX &amp; TRADE NOW</span>
                   </a>
+                  <button
+                    type="button"
+                    onClick={handleGetNextSignal}
+                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 px-5 py-3 font-tech text-xs font-extrabold tracking-wider text-slate-950 shadow-lg shadow-emerald-950/60 transition hover:from-emerald-400 hover:to-teal-300"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    <span>GENERATE NEXT SIGNAL</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
 
@@ -823,8 +856,8 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                 </div>
               </div>
 
-              {/* Action Buttons: Next Signal & Copy */}
-              <div className="mt-5 flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+              {/* Copy action remains below the detailed analysis. */}
+              <div className="mt-5 flex items-center justify-center pt-2">
                 <button
                   type="button"
                   onClick={handleCopySignal}
@@ -834,15 +867,6 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                   <span>{copied ? "COPIED TO CLIPBOARD" : "COPY VIP SIGNAL"}</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleGetNextSignal}
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-tech font-extrabold text-xs md:text-sm tracking-widest uppercase transition flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-950/60"
-                >
-                  <RefreshCw className="w-4 h-4" />
-                  <span>GENERATE NEXT SIGNAL</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
               </div>
             </div>
           )}
