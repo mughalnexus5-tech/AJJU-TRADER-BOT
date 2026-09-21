@@ -41,17 +41,15 @@ export const BackgroundFX: React.FC<BackgroundFXProps> = ({
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#040609]">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-background">
       {/* Dynamic Radial Vignettes */}
-      <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-emerald-600/10 rounded-full blur-[140px]"></div>
-      <div className="absolute top-1/2 -right-40 w-[550px] h-[550px] bg-red-600/10 rounded-full blur-[150px]"></div>
-      <div className="absolute -bottom-40 left-1/3 w-[650px] h-[650px] bg-emerald-950/20 rounded-full blur-[160px]"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-950/80 to-slate-950"></div>
 
       {/* Cyber Grid Lines */}
-      <div className="absolute inset-0 cyber-grid opacity-30"></div>
+      <div className="absolute inset-0 cyber-grid opacity-15"></div>
 
       {/* Subtle Digital Dots Texture */}
-      <div className="absolute inset-0 cyber-dots opacity-20"></div>
+      <div className="absolute inset-0 cyber-dots opacity-10"></div>
 
       {/* Floating Animated Candlestick Bars */}
       {!isReduced && (
@@ -97,7 +95,7 @@ export const BackgroundFX: React.FC<BackgroundFXProps> = ({
         {telemetryLines.map((item, idx) => (
           <div
             key={idx}
-            className={`absolute ${item.color} hidden sm:block`}
+            className={`absolute ${item.color} hidden lg:block opacity-50`}
             style={{ left: item.x, top: item.y }}
           >
             {item.text}
@@ -107,7 +105,7 @@ export const BackgroundFX: React.FC<BackgroundFXProps> = ({
 
       {/* Moving Cyber Scanline Beam */}
       {!isReduced && (
-        <div className="absolute inset-x-0 h-40 bg-gradient-to-b from-transparent via-emerald-500/5 to-transparent animate-scanline opacity-60 pointer-events-none"></div>
+        <div className="absolute inset-x-0 h-40 bg-gradient-to-b from-transparent via-emerald-500/5 to-transparent animate-scanline opacity-30 pointer-events-none"></div>
       )}
 
       {/* Bull & Bear Watermark Crest in the Center Background */}

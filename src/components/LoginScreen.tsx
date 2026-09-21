@@ -5,7 +5,8 @@ import { playClickSound, playReadyAlert } from "@/utils/soundEffects";
 import { useServerFn } from "@tanstack/react-start";
 import { verifyAccessKey } from "@/lib/license.functions";
 import { getDeviceId, getDeviceName } from "@/lib/device";
-import { ShieldCheck, Cpu, KeyRound, Sparkles, AlertCircle, Radio, MessageCircle } from "lucide-react";
+import { WhatsAppLogo } from "@/components/WhatsAppLogo";
+import { ShieldCheck, Cpu, KeyRound, Sparkles, AlertCircle, Radio } from "lucide-react";
 
 const WHATSAPP_CHANNEL_URL = "https://whatsapp.com/channel/0029Vb9hzvd5EjxzfM5wgy0q";
 
@@ -171,8 +172,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               rel="noreferrer"
               className="group flex w-full items-center gap-3 rounded-xl border border-emerald-500/45 bg-emerald-500/10 p-2.5 text-left transition hover:border-emerald-400 hover:bg-emerald-500/15"
             >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-emerald-400/60 bg-emerald-500/20 text-emerald-300 shadow-md shadow-emerald-950/60">
-                <MessageCircle className="h-5 w-5" />
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-emerald-300/70 bg-emerald-500 text-slate-950 shadow-md shadow-emerald-950/60">
+                <WhatsAppLogo className="h-6 w-6" />
               </span>
               <span className="min-w-0 font-tech text-[11px] font-bold leading-4 text-emerald-300 sm:text-xs">
                 Don't have an Access Key?<br />Get Key on WhatsApp

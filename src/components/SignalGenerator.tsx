@@ -112,6 +112,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
   const [latestSignal, setLatestSignal] = useState<GeneratedSignal | null>(null);
   const [copied, setCopied] = useState(false);
   const [showTradeSettings, setShowTradeSettings] = useState(false);
+  const [showPairBrowser, setShowPairBrowser] = useState(false);
   const [entryWindow, setEntryWindow] = useState(0);
   const resultSectionRef = useRef<HTMLDivElement>(null);
 
@@ -176,6 +177,21 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
       return matchesMarket && matchesCategory && matchesSearch && matchesFav;
     });
   }, [pairs, marketType, category, searchQuery, showFavoritesOnly, favorites]);
+
+  const visiblePairs = showPairBrowser ? filteredPairs : [selectedPair];
+
+  const chartPoints = useMemo(() => {
+    const seed = selectedPair.symbol.split("").reduce((total, character) => total + character.charCodeAt(0), 0);
+    return Array.from({ length: 30 }, (_, index) => {
+      const wave = Math.sin((index + seed) * 0.72) * 14;
+      const impulse = ((index * 17 + seed) % 19) - 9;
+      return 58 + wave + impulse * 0.55 + index * 0.55;
+    });
+  }, [selectedPair.symbol]);
+
+  const chartPolyline = chartPoints
+    .map((point, index) => `${(index / (chartPoints.length - 1)) * 100},${100 - point}`)
+    .join(" ");
 
   // Toggle favorite
   const toggleFavorite = (pairId: string, e: React.MouseEvent) => {
@@ -442,7 +458,20 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
               </button>
             </div>
 
+            <button
+              type="button"
+              onClick={() => setShowPairBrowser((open) => !open)}
+              className="flex w-full items-center justify-between rounded-xl border border-emerald-500/40 bg-slate-950 px-3.5 py-3 text-left transition hover:border-emerald-400"
+            >
+              <span>
+                <span className="block font-tech text-xs font-bold text-slate-100">{pairDisplayName(selectedPair)}</span>
+                <span className="mt-0.5 block font-mono text-[10px] text-slate-300">{selectedPair.payout}% PAYOUT • TAP TO {showPairBrowser ? "CLOSE" : "VIEW ALL PAIRS"}</span>
+              </span>
+              <ChevronRight className={`h-4 w-4 text-emerald-300 transition-transform ${showPairBrowser ? "rotate-90" : ""}`} />
+            </button>
+
             {/* Search Input */}
+            {showPairBrowser && (
             <div className="relative">
               <input
                 type="text"
@@ -453,15 +482,16 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
               />
               <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-3" />
             </div>
+            )}
 
             {/* Pairs List (Scrollable) */}
-            <div className="space-y-1.5 max-h-[360px] overflow-y-auto pr-1">
+            <div className={`space-y-1.5 overflow-y-auto pr-1 ${showPairBrowser ? "max-h-[360px]" : "max-h-20"}`}>
               {filteredPairs.length === 0 ? (
                 <div className="p-6 text-center text-xs font-mono text-slate-500">
                   No pairs matching filter
                 </div>
               ) : (
-                filteredPairs.map((pair) => {
+                visiblePairs.map((pair) => {
                   const isSelected = selectedPair.id === pair.id;
                   const isFav = favorites.includes(pair.id);
 
@@ -471,6 +501,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                       onClick={() => {
                         playClickSound(soundEnabled);
                         setSelectedPair(pair);
+                        setShowPairBrowser(false);
                         setShowTradeSettings(true);
                       }}
                       className={`p-2.5 rounded-xl border transition-all flex items-center justify-between cursor-pointer ${
@@ -656,7 +687,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
 
           {/* PHASE 1: 12-STAGE CONFLUENCE RADAR SCANNING */}
           {tradePhase === "analyzing" && (
-            <div className="min-h-[calc(100vh-9rem)] p-5 md:p-8 rounded-2xl glass-panel-glow border border-emerald-500/40 space-y-5 animate-pulse-slow shadow-2xl">
+            <div className="min-h-[calc(100vh-9rem)] p-5 md:p-8 rounded-2xl glass-panel-glow border border-emerald-500/40 space-y-5 shadow-2xl">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-slate-800">
                 <div className="flex items-center gap-3">
                   <div className="relative w-12 h-12 rounded-full border-2 border-emerald-500/50 flex items-center justify-center">
@@ -686,6 +717,21 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                   className="h-full bg-gradient-to-r from-red-500 via-amber-400 to-emerald-400 transition-all duration-200"
                   style={{ width: `${((currentStepIndex + 1) / ANALYSIS_STEPS.length) * 100}%` }}
                 ></div>
+              </div>
+
+              {/* Live-style price analysis chart */}
+              <div className="rounded-xl border border-slate-700 bg-slate-950 p-3 shadow-inner">
+                <div className="mb-2 flex items-center justify-between font-mono text-[10px]">
+                  <span className="font-bold text-slate-100">{pairDisplayName(selectedPair)} • LIVE ANALYSIS</span>
+                  <span className="flex items-center gap-1.5 text-emerald-300"><Activity className="h-3.5 w-3.5" /> PRICE MOMENTUM</span>
+                </div>
+                <div className="relative h-36 overflow-hidden rounded-lg border border-slate-800 bg-slate-950 cyber-grid">
+                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full" aria-label="Animated market analysis chart">
+                    <polyline points={chartPolyline} fill="none" stroke="currentColor" strokeWidth="1.8" vectorEffect="non-scaling-stroke" className="text-emerald-400 drop-shadow-[0_0_6px_currentColor]" />
+                  </svg>
+                  <div className="absolute inset-x-0 top-1/2 border-t border-dashed border-amber-400/40" />
+                  <div className="absolute bottom-2 left-2 rounded bg-slate-950/90 px-2 py-1 font-mono text-[9px] font-bold text-slate-200">SCANNING LIQUIDITY & MOMENTUM</div>
+                </div>
               </div>
 
               {/* 12-Step Grid Badges */}

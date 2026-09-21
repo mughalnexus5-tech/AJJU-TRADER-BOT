@@ -1,6 +1,7 @@
 import React from "react";
 import { AppNavView } from "../types";
 import { playClickSound } from "../utils/soundEffects";
+import { WhatsAppLogo } from "@/components/WhatsAppLogo";
 import { 
   LayoutDashboard, 
   Cpu, 
@@ -10,8 +11,7 @@ import {
   BarChart3, 
   UserCircle, 
   Sliders,
-  Sparkles,
-  MessageCircle
+  Sparkles
 } from "lucide-react";
 
 const WHATSAPP_CHANNEL_URL = "https://whatsapp.com/channel/0029Vb9hzvd5EjxzfM5wgy0q";
@@ -143,8 +143,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             rel="noreferrer"
             className="flex w-full items-center gap-2.5 rounded-lg border border-emerald-500/50 bg-emerald-500/15 p-2.5 text-left font-tech text-[11px] font-bold text-emerald-300 transition hover:bg-emerald-500/25"
           >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-emerald-400/60 bg-emerald-500/20">
-              <MessageCircle className="h-4 w-4" />
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-emerald-300/70 bg-emerald-500 text-slate-950 shadow-md shadow-emerald-950/60">
+              <WhatsAppLogo className="h-5 w-5" />
             </span>
             <span>JOIN WHATSAPP CHANNEL / SUPPORT</span>
           </a>

@@ -7,4 +7,5 @@
 - [x] Improve trade settings modal, directional result card, timer, and primary actions
 - [x] Add requested search/social metadata
 - [x] Verify mobile experience and publish changes to GitHub
+- [x] Add clear WhatsApp branding, collapsed pair browser, stronger text contrast, and analysis chart
 - [ ] Submit Google indexing when a Search Console connection is available
