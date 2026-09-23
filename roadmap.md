@@ -8,4 +8,5 @@
 - [x] Add requested search/social metadata
 - [x] Verify mobile experience and publish changes to GitHub
 - [x] Add clear WhatsApp branding, collapsed pair browser, stronger text contrast, and analysis chart
+- [x] Fix standalone Vercel imports and strengthen the pure-black beginner-friendly interface
 - [ ] Submit Google indexing when a Search Console connection is available

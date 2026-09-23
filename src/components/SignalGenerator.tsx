@@ -477,7 +477,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search symbol (EUR, BTC, XAU)..."
+                placeholder="Search a pair, for example EUR or BTC..."
                 className="w-full px-3.5 py-2 pl-9 rounded-xl bg-slate-950/80 border border-slate-800 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
               />
               <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-3" />
@@ -587,7 +587,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-mono font-bold text-slate-300 flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5 text-amber-400" />
-                  <span>SELECT TRADE EXPIRY TIMEFRAME</span>
+                  <span>CHOOSE HOW LONG THE TRADE WILL RUN</span>
                 </span>
                 <span className="text-[10px] font-mono text-amber-400 font-bold">
                   OTC RAPID CANDLES
@@ -619,7 +619,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               <div>
                 <label className="text-[11px] font-mono text-slate-400 block mb-1">
-                  STRATEGY ALGORITHM
+                  ANALYSIS METHOD
                 </label>
                 <select
                   value={selectedStrategy}
@@ -636,7 +636,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
 
               <div>
                 <label className="text-[11px] font-mono text-slate-400 block mb-1">
-                  CONFLUENCE DEPTH
+                   ANALYSIS SPEED
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
@@ -648,7 +648,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                         : "bg-slate-900 text-slate-500 border border-slate-800"
                     }`}
                   >
-                    8-STAGE SPEED
+                    QUICK CHECK
                   </button>
                   <button
                     type="button"
@@ -659,7 +659,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                         : "bg-slate-900 text-slate-500 border border-slate-800"
                     }`}
                   >
-                    12-STAGE ULTRA
+                    DEEP CHECK
                   </button>
                 </div>
               </div>
@@ -696,7 +696,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                   </div>
                   <div>
                     <h4 className="font-tech text-base font-bold text-white tracking-wider">
-                      CONFLUENCE ENGINE ANALYZING
+                      CHECKING THE MARKET
                     </h4>
                     <p className="text-xs font-mono text-emerald-400">
                       STAGE {currentStepIndex + 1} OF {ANALYSIS_STEPS.length}: {ANALYSIS_STEPS[currentStepIndex]}
@@ -744,7 +744,7 @@ export const SignalGenerator: React.FC<SignalGeneratorProps> = ({
                         ? "bg-emerald-950/60 border-emerald-500/40 text-emerald-300"
                         : idx === currentStepIndex
                         ? "bg-amber-950/80 border-amber-400 text-amber-300 font-bold scale-102"
-                        : "bg-slate-900/40 border-slate-800/60 text-slate-600"
+                        : "bg-slate-900/80 border-slate-700 text-slate-300"
                     }`}
                   >
                     <span className={`w-1.5 h-1.5 rounded-full ${

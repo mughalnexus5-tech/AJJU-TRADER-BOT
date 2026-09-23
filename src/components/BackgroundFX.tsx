@@ -41,15 +41,15 @@ export const BackgroundFX: React.FC<BackgroundFXProps> = ({
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-background">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-black">
       {/* Dynamic Radial Vignettes */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-950/80 to-slate-950"></div>
+      <div className="absolute inset-0 bg-black"></div>
 
       {/* Cyber Grid Lines */}
-      <div className="absolute inset-0 cyber-grid opacity-15"></div>
+      <div className="absolute inset-0 cyber-grid opacity-10"></div>
 
       {/* Subtle Digital Dots Texture */}
-      <div className="absolute inset-0 cyber-dots opacity-10"></div>
+      <div className="absolute inset-0 cyber-dots opacity-5"></div>
 
       {/* Floating Animated Candlestick Bars */}
       {!isReduced && (

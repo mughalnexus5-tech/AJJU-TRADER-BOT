@@ -74,8 +74,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* Navigation List */}
         <div className="space-y-1.5">
-          <div className="px-3 py-2 text-[10px] font-mono tracking-widest text-slate-500 uppercase flex items-center justify-between">
-            <span>TERMINAL MODULES</span>
+          <div className="px-3 py-2 text-[10px] font-mono tracking-widest text-slate-300 uppercase flex items-center justify-between">
+            <span>BOT MENU</span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
           </div>
 
@@ -159,7 +159,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span>SECURITY</span>
               <span className="text-emerald-400 font-bold">L2 ENCRYPTED</span>
             </div>
-            <div className="flex items-center justify-between text-slate-500 text-[10px] pt-1">
+            <div className="flex items-center justify-between text-slate-300 text-[10px] pt-1">
               <span>LATENCY</span>
               <span className="text-slate-400 font-mono">12 MS ULTRA-FAST</span>
             </div>

@@ -81,7 +81,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
             </h1>
 
             <p className="text-sm md:text-base font-tech text-emerald-400 font-semibold tracking-wide">
-              QUANTITATIVE BINARY CONFLUENCE COMMAND TERMINAL
+              SMART BINARY TRADING TERMINAL
             </p>
 
             {/* Quick Action Buttons */}
@@ -94,7 +94,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 className="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-tech font-extrabold text-sm tracking-wider uppercase transition shadow-lg shadow-emerald-950/60 flex items-center gap-2.5 cursor-pointer transform active:scale-95"
               >
                 <Cpu className="w-4 h-4" />
-                <span>LAUNCH SIGNAL GENERATOR</span>
+                <span>GET A TRADING SIGNAL</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
@@ -106,7 +106,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                 className="px-5 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-slate-200 font-tech text-sm font-semibold tracking-wider transition flex items-center gap-2 cursor-pointer"
               >
                 <TrendingUp className="w-4 h-4 text-emerald-400" />
-                <span>VIEW OTC ASSET SCANNER</span>
+                <span>VIEW AVAILABLE MARKETS</span>
               </button>
             </div>
           </div>
@@ -256,7 +256,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
         <div className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-amber-400" />
           <h3 className="font-tech text-base md:text-lg font-bold text-white tracking-wide">
-            FOUR-STEP BINARY EXECUTION PROTOCOL
+            HOW TO GET AND USE A SIGNAL
           </h3>
         </div>
 
@@ -266,9 +266,9 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               <span className="text-[10px] text-amber-400 font-bold">STEP 01</span>
               <Target className="w-4 h-4 text-emerald-400" />
             </div>
-            <h5 className="font-tech font-bold text-white text-sm">SELECT PAIR & TIMEFRAME</h5>
-            <p className="text-slate-400 text-[11px] leading-relaxed">
-              Choose high-payout OTC pairs (92%) and your desired trade expiry (5s, 10s, 15s, 30s, or 1m).
+            <h5 className="font-tech font-bold text-white text-sm">CHOOSE PAIR & TRADE TIME</h5>
+            <p className="text-slate-300 text-[11px] leading-relaxed">
+              Pick a Quotex OTC or live pair, then choose how long the trade should run.
             </p>
           </div>
 
@@ -277,9 +277,9 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               <span className="text-[10px] text-amber-400 font-bold">STEP 02</span>
               <Cpu className="w-4 h-4 text-teal-400" />
             </div>
-            <h5 className="font-tech font-bold text-white text-sm">ENGAGE 12-STAGE RADAR</h5>
-            <p className="text-slate-400 text-[11px] leading-relaxed">
-              Click Generate Signal. The algorithm performs comprehensive multi-indicator and price-action confirmation.
+            <h5 className="font-tech font-bold text-white text-sm">START MARKET ANALYSIS</h5>
+            <p className="text-slate-300 text-[11px] leading-relaxed">
+              Tap Generate Signal and wait while the bot checks market direction and momentum.
             </p>
           </div>
 
@@ -288,9 +288,9 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               <span className="text-[10px] text-amber-400 font-bold">STEP 03</span>
               <Timer className="w-4 h-4 text-amber-400" />
             </div>
-            <h5 className="font-tech font-bold text-white text-sm">5-SECOND PRE-ENTRY ALERT</h5>
-            <p className="text-slate-400 text-[11px] leading-relaxed">
-              Review direction (CALL/PUT) and full trade logic as the 5-sec countdown ticks. Open your broker window.
+            <h5 className="font-tech font-bold text-white text-sm">READ CALL OR PUT</h5>
+            <p className="text-slate-300 text-[11px] leading-relaxed">
+              Green CALL means price up. Red PUT means price down. Check the entry timer before trading.
             </p>
           </div>
 
@@ -299,9 +299,9 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               <span className="text-[10px] text-amber-400 font-bold">STEP 04</span>
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
             </div>
-            <h5 className="font-tech font-bold text-white text-sm">EXECUTE & WIN</h5>
-            <p className="text-slate-400 text-[11px] leading-relaxed">
-              Execute trade at countdown 0. Watch the real-time window track the expiry duration to verified completion.
+            <h5 className="font-tech font-bold text-white text-sm">OPEN QUOTEX & TRADE</h5>
+            <p className="text-slate-300 text-[11px] leading-relaxed">
+              Open Quotex, select the same pair and time, then place the shown CALL or PUT trade.
             </p>
           </div>
         </div>
@@ -352,7 +352,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               </div>
 
               <div className="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
-                <span className="text-slate-500">TREND: {pair.trend}</span>
+                <span className="text-slate-300">TREND: {pair.trend}</span>
                 <span className="text-emerald-400 font-bold group-hover:translate-x-0.5 transition flex items-center gap-0.5">
                   SCAN <ArrowRight className="w-3 h-3" />
                 </span>

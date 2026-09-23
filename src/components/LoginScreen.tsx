@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { BackgroundFX } from "@/components/BackgroundFX";
 import { playClickSound, playReadyAlert } from "@/utils/soundEffects";
-import { useServerFn } from "@tanstack/react-start";
+import { useServerFn } from "@/lib/rpc";
 import { verifyAccessKey } from "@/lib/license.functions";
 import { getDeviceId, getDeviceName } from "@/lib/device";
 import { WhatsAppLogo } from "@/components/WhatsAppLogo";
@@ -93,8 +93,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               </p>
             </div>
 
-            <p className="text-xs text-slate-400 mt-2 max-w-xs font-sans">
-              Algorithmic Confluence Engine • OTC & Live High-Precision Signals
+            <p className="text-xs text-slate-300 mt-2 max-w-xs font-sans">
+              Choose a market, select a trade time, and get a clear CALL or PUT signal.
             </p>
           </div>
 
@@ -182,7 +182,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </form>
 
           {/* Connection Telemetry Footer */}
-          <div className="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+          <div className="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-300">
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
               <span>NODE: TOKYO-1 PRIMARY</span>
